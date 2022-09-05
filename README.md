@@ -7,8 +7,8 @@
 ```
 $ docker run -p -dit 8081:80 nginx:latest
 $ docker exec -it 107d742b91cb bash
-$ find -name "index.html"
-$ echo "<html>
+root@107d742b91cb:/# find -name "index.html"
+root@107d742b91cb:/# echo "<html>
 <head>
 Hey, Netology
 </head>
@@ -16,7 +16,7 @@ Hey, Netology
 <h1>I’m DevOps Engineer</h1>
 </body>
 </html>" > /usr/share/nginx/html/index.html
-$ exit
+root@107d742b91cb:/# exit
 $ curl 127.0.0.1:8081
 <html>
 <head>
@@ -106,3 +106,4 @@ total 8
 -rw-r--r-- 1 root root  8 Sep  4 12:50 hostVm_file
 
 ```
+
