@@ -34,12 +34,12 @@ test_db=# \l
 * **описание таблиц (describe)**
 ```
 test_db=# \d+ orders
-                                                Table "public.orders"
- Column |  Type   | Collation | Nullable |              Default               | Storage  | Stats target | Description 
---------+---------+-----------+----------+------------------------------------+----------+--------------+-------------
- id     | integer |           | not null | nextval('orders_id_seq'::regclass) | plain    |              | 
- name   | character varying    |           |          |                                    | extended |              | 
- price  | integer |           |          |                                    | plain    |              | 
+                                                     Table "public.orders"
+ Column |       Type        | Collation | Nullable |              Default               | Storage  | Stats target | Description 
+--------+-------------------+-----------+----------+------------------------------------+----------+--------------+-------------
+ id     | integer           |           | not null | nextval('orders_id_seq'::regclass) | plain    |              | 
+ name   | character varying |           |          |                                    | extended |              | 
+ price  | integer           |           |          |                                    | plain    |              | 
 Indexes:
     "orders_pkey" PRIMARY KEY, btree (id)
 Referenced by:
@@ -48,18 +48,19 @@ Access method: heap
 ```
 ```
 test_db=# \d+ clients
-                                                 Table "public.clients"
-  Column  |  Type   | Collation | Nullable |               Default               | Storage  | Stats target | Description 
-----------+---------+-----------+----------+-------------------------------------+----------+--------------+-------------
- id       | integer |           | not null | nextval('clients_id_seq'::regclass) | plain    |              | 
- surname  | character varying    |           |          |                                     | extended |              | 
- country  | character varying    |           |          |                                     | extended |              | 
- order_id | integer |           |          |                                     | plain    |              | 
+                                                      Table "public.clients"
+  Column  |       Type        | Collation | Nullable |               Default               | Storage  | Stats target | Description 
+----------+-------------------+-----------+----------+-------------------------------------+----------+--------------+-------------
+ id       | integer           |           | not null | nextval('clients_id_seq'::regclass) | plain    |              | 
+ surname  | character varying |           |          |                                     | extended |              | 
+ country  | character varying |           |          |                                     | extended |              | 
+ order_id | integer           |           |          |                                     | plain    |              | 
 Indexes:
     "clients_pkey" PRIMARY KEY, btree (id)
 Foreign-key constraints:
     "clients_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id)
 Access method: heap
+
 ```
 
 * **SQL-запрос для выдачи списка пользователей с правами над таблицами test_db**
