@@ -121,6 +121,21 @@ test_db=# INSERT INTO clients (surname,country) VALUES
 ('Ritchie Blackmore','Russia');
 INSERT 0 5
 ```
+* **вычислите количество записей для каждой таблицы**
+
+```
+test_db=# select count(*) from clients;
+ count 
+-------
+     5
+(1 row)
+
+test_db=# select count(*) from orders;
+ count 
+-------
+     5
+(1 row)
+```
 
 ## Задача 4
 
