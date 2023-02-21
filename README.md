@@ -4,10 +4,10 @@
 **Используя docker поднимите инстанс PostgreSQL (версию 12) c 2 volume, в который будут складываться данные БД и бэкапы.
 Приведите получившуюся команду или docker-compose манифест.**
 ```
-$ docker pull postgres:12
-$ docker volume create database
-$ docker volume create backup
-$ docker run -d --name homework-6.2 \
+# docker pull postgres:12
+# docker volume create database
+# docker volume create backup
+# docker run -d --name homework-6.2 \
 > -e POSTGRES_PASSWORD=Qwerty123 \
 > -p 5432:5432 \
 > -v database:/var/lib/postgresql/database \
@@ -169,6 +169,28 @@ test_db=# EXPLAIN SELECT * FROM clients;
  Seq Scan on clients  (cost=0.00..18.10 rows=810 width=72)
 (1 row)
 ```
-cost - абстрактная величина стоимости операции  (число чтений диска * стоймость чтения одной страницы с диска + число обработаных строк * стоймость обработки строки)
-rows - число строк (ожидаемое)
+cost - абстрактная величина стоимости операции  (число чтений диска * стоймость чтения одной страницы с диска + число обработаных строк * стоймость обработки строки) 
+
+rows - число строк (ожидаемое) 
+
 width - средний размер строки в байтах (ожидаемый)
+
+## Задача 6
+**Создайте бэкап БД test_db и поместите его в volume, предназначенный для бэкапов**
+```
+# docker exec -t homework-6.2 psql pg_dumpall -c -U postgres > /var/lib/postgresql/backup/test.sql
+```
+**Остановите контейнер с PostgreSQL (но не удаляйте volumes).**
+```
+# docker stop ...
+```
+**Поднимите новый пустой контейнер с PostgreSQL**
+```
+# docker run -d --name homework_backup-6.2 -e POSTGRES_PASSWORD=Qwerty123 -p 5432:5432 -v database_1:/var/lib/postgresql/database_1 -v backup_1:/var/lib/postgresql/backup_1 postgres:12
+```
+**Восстановите БД test_db в новом контейнере.**
+```
+# cat /var/lib/postgresql/backup/test.sql | docker exec -i homework_backup-6.2 psql -U postgres
+ERROR:  syntax error at or near "psql"
+LINE 1: psql: error: connection to server on socket "/var/run/postgr...
+```
