@@ -186,11 +186,16 @@ width - средний размер строки в байтах (ожидаем
 ```
 **Поднимите новый пустой контейнер с PostgreSQL**
 ```
-# docker run -d --name homework_backup-6.2 -e POSTGRES_PASSWORD=Qwerty123 -p 5432:5432 -v database_1:/var/lib/postgresql/database_1 -v backup_1:/var/lib/postgresql/backup_1 postgres:12
+# docker run -d --name homework_backup-6.2 -e POSTGRES_PASSWORD=Qwerty123 -p 5432:5432 -v database_1:/var/lib/postgresql/database_1 -v backup_1:/var/lib/postgresql/backup postgres:12
 ```
 **Восстановите БД test_db в новом контейнере.**
 ```
 # cat /var/lib/postgresql/backup/test.sql | docker exec -i homework_backup-6.2 psql -U postgres
 ERROR:  syntax error at or near "psql"
 LINE 1: psql: error: connection to server on socket "/var/run/postgr...
+```
+Попробовал еще способ, но не получилось 
+```
+docker exec -it homework_backup-6.2 psql -U postgres -f /var/lib/postgresql/backup/test.sql
+psql: error: /var/lib/postgresql/backup/test.sql: No such file or directory
 ```
