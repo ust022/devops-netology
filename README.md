@@ -199,3 +199,16 @@ LINE 1: psql: error: connection to server on socket "/var/run/postgr...
 docker exec -it homework_backup-6.2 psql -U postgres -f /var/lib/postgresql/backup/test.sql
 psql: error: /var/lib/postgresql/backup/test.sql: No such file or directory
 ```
+
+
+____________________________
+# Задача 6 восстановление 
+
+Зашел в контейнер и выполнил команду внутри: 
+
+```
+# docker exec -it homework_backup-6.2 bash
+root@1ef00b6bfd25:/# psql -U postgres test_db -f /var/lib/postgresql/backup/test.sql 
+psql:/var/lib/postgresql/backup/test.sql:1: ERROR:  syntax error at or near "psql"
+LINE 1: psql: error: connection to server on socket "/var/run/postgr...
+```
