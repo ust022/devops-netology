@@ -178,7 +178,7 @@ width - средний размер строки в байтах (ожидаем
 ## Задача 6
 **Создайте бэкап БД test_db и поместите его в volume, предназначенный для бэкапов**
 ```
-# docker exec -t homework-6.2 psql pg_dumpall -c -U postgres > /var/lib/postgresql/backup/test.sql
+# pg_dump -U postgres test_db > /var/lib/postgresql/backup/backup.sql
 ```
 **Остановите контейнер с PostgreSQL (но не удаляйте volumes).**
 ```
@@ -186,29 +186,81 @@ width - средний размер строки в байтах (ожидаем
 ```
 **Поднимите новый пустой контейнер с PostgreSQL**
 ```
-# docker run -d --name homework_backup-6.2 -e POSTGRES_PASSWORD=Qwerty123 -p 5432:5432 -v database_1:/var/lib/postgresql/database_1 -v backup_1:/var/lib/postgresql/backup postgres:12
+# docker run -d --name homework_backup-6.2 -e POSTGRES_PASSWORD=Qwerty123 -p 5432:5432 -v database_1:/var/lib/postgresql/database -v backup:/var/lib/postgresql/backup postgres:12
 ```
 **Восстановите БД test_db в новом контейнере.**
 ```
-# cat /var/lib/postgresql/backup/test.sql | docker exec -i homework_backup-6.2 psql -U postgres
-ERROR:  syntax error at or near "psql"
-LINE 1: psql: error: connection to server on socket "/var/run/postgr...
+root@3a144f3a7358:/# pg_restore -U postgres -d test_db < /var/lib/postgresql/backup/backup.sql 
+pg_restore: error: input file appears to be a text format dump. Please use psql.
 ```
-Попробовал еще способ, но не получилось 
-```
-docker exec -it homework_backup-6.2 psql -U postgres -f /var/lib/postgresql/backup/test.sql
-psql: error: /var/lib/postgresql/backup/test.sql: No such file or directory
-```
-
-
-____________________________
-# Задача 6 восстановление 
-
-Зашел в контейнер и выполнил команду внутри: 
+Говорит нельзя так, надо psql использовать, приступаем:
 
 ```
-# docker exec -it homework_backup-6.2 bash
-root@1ef00b6bfd25:/# psql -U postgres test_db -f /var/lib/postgresql/backup/test.sql 
-psql:/var/lib/postgresql/backup/test.sql:1: ERROR:  syntax error at or near "psql"
-LINE 1: psql: error: connection to server on socket "/var/run/postgr...
+root@3a144f3a7358:/# psql -U postgres -d test_db < /var/lib/postgresql/backup/backup.sql 
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  database "test_db" does not exist
 ```
+
+Следовательно заходим и создаем базу test_db, далее пробуем восстановить снова:
+
+```
+root@3a144f3a7358:/# psql -U postgres -d test_db < /var/lib/postgresql/backup/backup.sql 
+SET
+SET
+SET
+SET
+SET
+ set_config 
+------------
+ 
+(1 row)
+
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE SEQUENCE
+ALTER TABLE
+ALTER SEQUENCE
+CREATE SEQUENCE
+ALTER TABLE
+ALTER SEQUENCE
+CREATE TABLE
+ALTER TABLE
+CREATE SEQUENCE
+ALTER TABLE
+ALTER SEQUENCE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+COPY 5
+COPY 5
+ setval 
+--------
+      6
+(1 row)
+
+ setval 
+--------
+      1
+(1 row)
+
+ setval 
+--------
+      5
+(1 row)
+
+ALTER TABLE
+ALTER TABLE
+CREATE INDEX
+ALTER TABLE
+ERROR:  role "test-admin-user" does not exist
+ERROR:  role "test-simple-user" does not exist
+ERROR:  role "test-admin-user" does not exist
+ERROR:  role "test-simple-user" does not exist
+```
+
+Видим, что необходимо переносить каким-то образом роли или создавать юзеров по новой. 
